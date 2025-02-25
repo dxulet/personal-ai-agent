@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TaskInput from './components/TaskInput';
 import ChatMessages from './components/ChatMessages';
 import ThemeToggle from './components/ThemeToggle';
+import AIInputWithLoading from '../components/ui/ai-input-with-loading';
 import { UserInput, ChatResponse } from './types';
 
 export default function Home() {
@@ -14,6 +14,7 @@ export default function Home() {
     role: 'user' | 'assistant';
     content: string;
     suggestedActions?: ChatResponse['suggestedActions'];
+    isLoading?: boolean;
   }[]>([]);
 
   useEffect(() => {
@@ -73,16 +74,16 @@ export default function Home() {
     localStorage.removeItem('googleTokens');
   };
 
-  const handleTaskSubmit = async (input: UserInput) => {
+  const handleTaskSubmit = async (text: string) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Add user message to chat
-      setMessages(prev => [...prev, {
-        role: 'user',
-        content: input.text
-      }]);
+      // Add user message and temporary loading message
+      const userMessage = { role: 'user' as const, content: text };
+      const loadingMessage = { role: 'assistant' as const, content: '', isLoading: true };
+      
+      setMessages(prev => [...prev, userMessage, loadingMessage]);
 
       const response = await fetch('/api/task', {
         method: 'POST',
@@ -90,7 +91,7 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          text: input.text,
+          text: text,
           accessToken: accessToken 
         }),
       });
@@ -101,33 +102,30 @@ export default function Home() {
         throw new Error(data.error || 'Failed to process request');
       }
 
-      // Handle chat response
       const chatResponse = data.data as ChatResponse;
       
-      // If we need calendar access and user is not logged in
-      if (chatResponse.message.includes("need access to your Google Calendar") && !accessToken) {
-        setMessages(prev => [...prev, {
+      // Replace the loading message with the actual response
+      setMessages(prev => [
+        ...prev.slice(0, -1), // Remove loading message
+        {
           role: 'assistant',
           content: chatResponse.message,
-          suggestedActions: [{
-            type: 'info',
-            description: 'Login with Google Calendar'
-          }]
-        }]);
-        setError('Please login with Google Calendar to access your schedule');
-      } else {
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: chatResponse.message,
-          suggestedActions: chatResponse.suggestedActions
-        }]);
-      }
+          suggestedActions: chatResponse.suggestedActions,
+          isLoading: false
+        }
+      ]);
+
     } catch (err) {
+      // Remove loading message and show error
+      setMessages(prev => [
+        ...prev.slice(0, -1),
+        {
+          role: 'assistant',
+          content: 'Sorry, an error occurred. Please try again.',
+          isLoading: false
+        }
+      ]);
       setError(err instanceof Error ? err.message : 'An error occurred');
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'Sorry, an error occurred. Please try again.'
-      }]);
     } finally {
       setIsLoading(false);
     }
@@ -137,7 +135,7 @@ export default function Home() {
     if (action.description === 'Login with Google Calendar') {
       handleLogin();
     } else {
-      handleTaskSubmit({ text: action.description });
+      handleTaskSubmit(action.description);
     }
   };
 
@@ -170,7 +168,12 @@ export default function Home() {
         />
       )}
       
-      <TaskInput onSubmit={handleTaskSubmit} isLoading={isLoading} />
+      <AIInputWithLoading
+        onSubmit={handleTaskSubmit}
+        isLoading={isLoading}
+        placeholder="Chat with me about your schedule..."
+        className="max-w-2xl"
+      />
       
       {error && (
         <div className="w-full max-w-2xl mt-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-200 rounded-lg">
@@ -179,4 +182,4 @@ export default function Home() {
       )}
     </main>
   );
-} 
+}

@@ -37,15 +37,10 @@ export default function TaskInput({ onSubmit, isLoading }: TaskInputProps) {
             isLoading || !text.trim()
               ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
               : 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
-          }`}
+          } text-white dark:text-gray-200`}
         >
           {isLoading ? (
-            <TextShimmer 
-              duration={1}
-              className="text-white dark:text-gray-200"
-            >
-              Processing request...
-            </TextShimmer>
+            <TextShimmer>Processing...</TextShimmer>
           ) : (
             'Send Message'
           )}
