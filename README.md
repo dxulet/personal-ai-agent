@@ -39,19 +39,88 @@ Below is an initial documentation outline for an MVP version of a Personal AI As
 
 ---
 
-# Personal AI Assistant Agent MVP Documentation
+# Personal AI Assistant Agent
 
-## 1. Overview
+https://github.com/user-attachments/assets/497ee0d9-6ff4-47b1-9483-5ac9ed174bf8
 
-### 1.1. Project Vision
-- **Goal:** Develop a minimal viable product (MVP) that assists users in managing their tasks and schedules. The assistant will process natural language inputs to create and schedule tasks directly on Google Calendar.
-- **Core Technologies:**
-  - **LangChain:** For orchestrating language model prompts, chaining calls, and handling the conversation flow.
-  - **Azure OpenAI:** To power the underlying language model and understand/process user instructions.
-  - **Google Calendar API:** For scheduling and managing tasks as calendar events.
-  - **Next.js:** For building the web interface and API endpoints.
+## Project Title
+Personal AI Assistant Agent
 
-### 1.2. Key Features
-- **Task Management:** Interpret user input to extract tasks and relevant details (date, time, description).
-- **Calendar Integration:** Create, update, and delete calendar events on Google Calendar.
-- **Conversational Flow:** Utilize natural language processing to clarify ambiguous tasks and ensure correct scheduling.
+## Introduction
+This project is an intelligent personal assistant that helps users manage their tasks and schedules. The assistant processes natural language inputs to create and schedule tasks directly on Google Calendar, providing a seamless experience for personal productivity management.
+
+## Problem Statement
+In today's fast-paced digital environment, people struggle to efficiently manage their tasks and schedules across multiple platforms. Current solutions often require manual input in specific formats or navigating complex interfaces. This project addresses this challenge by creating an AI-powered assistant that understands natural language instructions and seamlessly integrates with calendar systems, reducing cognitive load and improving productivity.
+
+## Objectives
+- To create an intuitive AI assistant that understands and processes natural language task instructions
+- To seamlessly integrate with Google Calendar for scheduling management
+- To provide clarification when task details are ambiguous
+- To streamline the process of task creation and management
+
+## Technology Stack
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend**: Next.js API routes
+- **AI/ML**: Azure OpenAI, LangChain
+- **Integrations**: Google Calendar API
+- **Development**: TypeScript
+- **Deployment**: Vercel
+
+## Installation Instructions
+### Prerequisites
+- Node.js (v18 or later)
+- npm or yarn
+- Azure OpenAI API key
+- Google Cloud Platform account with Calendar API enabled
+
+### Steps
+```bash
+# 1. Clone the repository
+git clone https://github.com/dxulet/personal-ai-agent.git
+
+# 2. Navigate into the project directory
+cd personal-ai-agent
+
+# 3. Install dependencies
+npm install
+# or
+yarn install
+
+# 4. Set up environment variables
+# Create a .env.local file with the following:
+# AZURE_OPENAI_API_KEY=your_api_key
+# GOOGLE_CLIENT_ID=your_client_id
+# GOOGLE_CLIENT_SECRET=your_client_secret
+
+# 5. Start the development server
+npm run dev
+# or
+yarn dev
+```
+
+## Usage Guide
+1. Open [http://localhost:3000](http://localhost:3000) in your browser
+2. Authenticate with your Google account to enable calendar integration
+3. Type natural language instructions in the chat interface, for example:
+   - "Schedule a meeting with John tomorrow at 2 PM"
+   - "Remind me to call Mom on Friday"
+   - "Block 3 hours for focused work next Monday morning"
+4. The assistant will process your request and either:
+   - Create the event directly if all information is clear
+   - Ask clarifying questions if details are missing or ambiguous
+5. Once confirmed, the event will appear in your Google Calendar
+
+## Known Issues / Limitations
+- Currently only supports Google Calendar integration
+- Limited to English language instructions
+- Time zone handling may require additional configuration
+- Free-form natural language parsing may occasionally misinterpret complex instructions
+
+## References
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Azure OpenAI Service](https://azure.microsoft.com/en-us/services/cognitive-services/openai-service/)
+- [LangChain Documentation](https://js.langchain.com/docs/)
+- [Google Calendar API](https://developers.google.com/calendar)
+
+## Team Members
+- Daulet Ashikbayev, 220101005, 16-P
